@@ -5,7 +5,7 @@ import { RiTwitterXLine } from "react-icons/ri";
 const TopBar = () => {
   return (
     <>
-      <div className="bg-red-500 text-white">
+      <div className="bg-gray-800 text-white ">
         <div className="container mx-auto flex justify-between items-center py-3 px-4">
           <div className="hidden md:flex item-center space-x-4 flex align-center">
             <a href="#" className="hover:text-gray-300">
@@ -19,7 +19,7 @@ const TopBar = () => {
             </a>
           </div>
         </div>
-        <div className="flex justify-evenly ">
+        <div className="flex justify-evenly items-center ">
           <span>We ship worldwide-Fast and reliable shipping!</span>
           <div>
           <a href="+124587749" className="hover:text-gray-300">
