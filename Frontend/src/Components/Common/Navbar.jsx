@@ -26,7 +26,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className=" hidden md:flex space-x-6">
-          <Link to="#" className="text-gray-700 hover:text-black uppercase">
+          <Link to="/collections/all" className="text-gray-700 hover:text-black uppercase">
             man
           </Link>
           <Link to="#" className="text-gray-700 hover:text-black uppercase">

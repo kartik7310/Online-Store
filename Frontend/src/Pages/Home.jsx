@@ -2,8 +2,9 @@ import React from 'react'
 import Hero from '../Components/Layout/Hero'
 import GenderCollection from '../Components/Product/GenderCollection'
 import NewArival from '../Components/Product/newArrivals'
-import ProoductDetails from '../Components/Product/ProoductDetails'
-
+import ProductDetails from '../Components/Product/ProductDetails'
+import FeatureCollection from '../Components/Product/FeatureCollection'
+import FeatureSection from '../Components/Product/FeatureSection'
 const Home = () => {
   return (
     <div>
@@ -13,7 +14,10 @@ const Home = () => {
       
     {/* best seller */}
     <h2 className='text-3xl text-center font-bold mb-4'>Best Seller</h2>
-    <ProoductDetails/>
+    
+    <ProductDetails/>
+    <FeatureCollection/>
+    <FeatureSection/>
     </div>
   )
 }

@@ -1,8 +1,14 @@
 import React from "react";
 import { IoMdClose } from "react-icons/io";
 import CardProduct from "../Cart/CardProduct";
+import { useNavigate } from "react-router-dom";
 
 const CardDrower = ({ drawerOpen, handleToggleDrawer }) => {
+  const navigate = useNavigate()
+  function handleCheckout(){
+    handleToggleDrawer()
+    navigate('/checkout')
+  }
   return (
     <div
       className={`fixed top-0 right-0 w-full bg-white sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/3
@@ -26,7 +32,10 @@ const CardDrower = ({ drawerOpen, handleToggleDrawer }) => {
       </div>
       {/* button for checkout */}
       <div className="bottom-0 sticky p-4">
-        <button className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition">
+        <button
+          onClick={handleCheckout}
+          className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition cursor-pointer"
+        >
           CheckOut
         </button>
       </div>
