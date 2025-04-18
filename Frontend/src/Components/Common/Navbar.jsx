@@ -39,7 +39,10 @@ const Navbar = () => {
             bottom wear
           </Link>
         </div>
+
         <div className="flex item-center space-x-4">
+        <Link to="/admin"
+        className=" bg-black text-white rounded px-2 py-1 text-sm cursor-pointer  ">Admin</Link>
           <Link to="/profile" className="hover:text-black">
             <HiOutlineUser className="h-6 w-6 text-gray-700" />
           </Link>
