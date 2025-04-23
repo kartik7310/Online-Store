@@ -1,15 +1,60 @@
 import React, { useState } from "react";
-
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
+import { Rings } from 'react-loader-spinner';
+import { Link, useNavigate } from "react-router-dom";
 import registerImage from "../assets/register.webp";
 import { FaGoogle } from "react-icons/fa";
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [Name, setName] = useState("");
-  function handleSubmit(e) {
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log("user register", { Name, email, password });
+    if (!name || !password || !email) {
+      toast.error("All fields are required", { type: "error" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/register",
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      toast("Signup Successfully", { type: "success" });
+      console.log("User registered:", response.data);
+      setName("");
+      setEmail("");
+      setPassword("");
+      navigate("/login");
+    } catch (error) {
+      console.error("Signup error:", error);
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast(error.response.data.message, { type: "error" });
+      } else {
+        toast("Something went wrong. Please try again.", { type: "error" });
+      }
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <div className="flex min-h-screen">
@@ -41,7 +86,7 @@ const Signup = () => {
             <input
               type="Name"
               placeholder="Enter your Name"
-              value={Name}
+              value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -56,11 +101,26 @@ const Signup = () => {
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
-
-          <button className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
-            Signup
-          </button>
-          <button className="flex items-center justify-center gap-3 mt-2 w-full max-w-sm bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+          <button
+  disabled={loading}
+  className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition cursor-pointer flex justify-center items-center gap-2"
+>
+  {loading ? (
+    <>
+      <Rings
+        height={20}
+        width={20}
+        color="#ffffff"
+        visible={true}
+        ariaLabel="rings-loading"
+      />
+      Signing up...
+    </>
+  ) : (
+    "Signup"
+  )}
+</button>
+          <button className="flex items-center justify-center gap-3 mt-2 w-full max-w-sm bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out cursor-pointer">
             <FaGoogle className="text-red-500 text-lg" />
             <span>Signup with Google</span>
           </button>

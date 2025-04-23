@@ -20,7 +20,7 @@ import OrderManagementPage from "./Components/Admin/OrderManagementPage";
 function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       <Routes>
         {/* Wrap Home inside UserLayout using Outlet */}
         <Route path="/" element={<UserLayout />}>

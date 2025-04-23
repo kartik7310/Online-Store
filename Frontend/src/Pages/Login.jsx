@@ -1,14 +1,55 @@
 import React, { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.webp";
-
+import { toast } from "sonner";
+import axios from "axios";
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  function handleSubmit(e) {
+  const [loading, setLoading] = useState(false);
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log("user register", { Name, email, password });
+    if (!email || !password) {
+      toast.error("All fields are required", { type: "error" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/login",
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      toast("Login successfully", { type: "success" });
+      setEmail("");
+      setPassword("");
+      navigate("/");
+    } catch (error) {
+      console.error("Signup error:", error);
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast(error.response.data.message, { type: "error" });
+      } else {
+        toast("Something went wrong. Please try again.", { type: "error" });
+      }
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <div className="flex min-h-screen">
@@ -47,10 +88,13 @@ const Login = () => {
             />
           </div>
 
-          <button className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
-            Login
+          <button
+            disabled={loading}
+            className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition cursor-pointer"
+          >
+            {loading ? "Logging...." : "Login"}
           </button>
-          <button className="flex items-center justify-center gap-3 mt-2 w-full max-w-sm bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+          <button className="flex items-center justify-center gap-3 mt-2 w-full max-w-sm bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out cursor-pointer">
             <FaGoogle className="text-red-500 text-lg" />
             <span>Login with Google</span>
           </button>
