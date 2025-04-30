@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 async function userRegister(req, res) {
   try {
     const { name, email, password } = req.body;
+console.log({name,email,password});
 
     // Validate input
     if (!name || !email || !password) {
@@ -36,6 +37,8 @@ async function userRegister(req, res) {
 }
 async function userLogin(req, res) {
   try {
+    console.log(req.body);
+    
     const { email, password } = req.body;
 
     // Check for input
@@ -79,6 +82,7 @@ async function userLogin(req, res) {
           name: user.name,
           email: user.email,
           role: user.role,
+          token
         },
       });
   } catch (error) {

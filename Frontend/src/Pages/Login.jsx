@@ -4,52 +4,57 @@ import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.webp";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {loginUser} from "../redux/Slice/authSlice"
 const Login = () => {
   const navigate = useNavigate();
+  const disPatch= useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   async function handleSubmit(e) {
+   
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("All fields are required", { type: "error" });
-      return;
-    }
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/login",
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
-      toast("Login successfully", { type: "success" });
-      setEmail("");
-      setPassword("");
-      navigate("/");
-    } catch (error) {
-      console.error("Signup error:", error);
+    disPatch(loginUser({email,password}))
+    // if (!email || !password) {
+    //   toast.error("All fields are required", { type: "error" });
+    //   return;
+    // }
+    // setLoading(true);
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:5000/api/v1/login",
+    //     {
+    //       email,
+    //       password,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   console.log(response.data);
+    //   toast("Login successfully", { type: "success" });
+    //   setEmail("");
+    //   setPassword("");
+    //   navigate("/");
+    // } catch (error) {
+    //   console.error("Signup error:", error);
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast(error.response.data.message, { type: "error" });
-      } else {
-        toast("Something went wrong. Please try again.", { type: "error" });
-      }
-    } finally {
-      setLoading(false);
-    }
+    //   if (
+    //     error.response &&
+    //     error.response.data &&
+    //     error.response.data.message
+    //   ) {
+    //     toast(error.response.data.message, { type: "error" });
+    //   } else {
+    //     toast("Something went wrong. Please try again.", { type: "error" });
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
   }
   return (
     <div className="flex min-h-screen">

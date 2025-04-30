@@ -31,9 +31,9 @@ app.use(cors(corsOptions))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// DB Connection
+
 connectDB();
-// Routes
+//routes
 app.get("/home", (req, res) => {
   res.json("hello from server");
   console.log("hello from server");
@@ -56,5 +56,5 @@ app.use("/api/v1/admin",AdminOrder)
 // // Error Handler
 // app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server running on port ${[port]}`));

@@ -5,7 +5,10 @@ import { Rings } from 'react-loader-spinner';
 import { Link, useNavigate } from "react-router-dom";
 import registerImage from "../assets/register.webp";
 import { FaGoogle } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import {registration} from "../redux/Slice/authSlice"
 const Signup = () => {
+  const disPatch = useDispatch()
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,48 +16,49 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!name || !password || !email) {
-      toast.error("All fields are required", { type: "error" });
-      return;
-    }
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/register",
-        {
-          name,
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+    disPatch(registration({email,name,password}))
+    // if (!name || !password || !email) {
+    //   toast.error("All fields are required", { type: "error" });
+    //   return;
+    // }
+    // setLoading(true);
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:5000/api/v1/register",
+    //     {
+    //       name,
+    //       email,
+    //       password,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       withCredentials: true,
+    //     }
+    //   );
 
-      toast("Signup Successfully", { type: "success" });
-      console.log("User registered:", response.data);
-      setName("");
-      setEmail("");
-      setPassword("");
-      navigate("/login");
-    } catch (error) {
-      console.error("Signup error:", error);
+    //   toast("Signup Successfully", { type: "success" });
+    //   console.log("User registered:", response.data);
+    //   setName("");
+    //   setEmail("");
+    //   setPassword("");
+    //   navigate("/login");
+    // } catch (error) {
+    //   console.error("Signup error:", error);
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast(error.response.data.message, { type: "error" });
-      } else {
-        toast("Something went wrong. Please try again.", { type: "error" });
-      }
-    } finally {
-      setLoading(false);
-    }
+    //   if (
+    //     error.response &&
+    //     error.response.data &&
+    //     error.response.data.message
+    //   ) {
+    //     toast(error.response.data.message, { type: "error" });
+    //   } else {
+    //     toast("Something went wrong. Please try again.", { type: "error" });
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
   }
   return (
     <div className="flex min-h-screen">
