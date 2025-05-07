@@ -1,57 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import ProductGrid from "./ProductGrid";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchProductDetails, similarProduct } from "../../redux/Slice/product";
 
-const selectedProduct = {
-  name: "Stylish Jacket",
-  price: 120,
-  originalPrice: 150,
-  description: "This is a stylish jacket perfect for any occasion.",
-  brand: "FashionBrand",
-  material: "Leather",
-  sizes: ["S", "M", "L", "XL"],
-  colors: ["Red", "Black"],
-  images: [
-    {
-      url: "https://picsum.photos/500/500/?random=1",
-      altText: "Stylish jacket 1",
-    },
-    {
-      url: "https://picsum.photos/500/500/?random=2",
-      altText: "Stylish jacket 2",
-    },
-  ],
-};
+const ProductDetails = ({ productId }) => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { selectedProduct, similarProduct, loading, error } = useSelector(
+    (state) => state.product
+  );
+  const [user, guestId] = dispatch((state) => state.auth);
+  const fetchId = id || productId;
 
-const similarProduct=[
+  useEffect(() => {
+    if (!fetchId) return;
+    dispatch(fetchProductDetails(fetchId));
+    dispatch(similarProduct({ id: fetchId }));
+  }, [dispatch, fetchId]);
 
-  {
-    _id:1,
-    name:'product 1',
-    price:120,
-    images:[{url:"https://picsum.photos/500/500/?random=1"}],
-  },
-  {
-    _id:2,
-    name:'product 2',
-    price:120,
-    images:[{url:"https://picsum.photos/500/500/?random=2"}],
-  },
-  {
-    _id:3,
-    name:'product 3',
-    price:120,
-    images:[{url:"https://picsum.photos/500/500/?random=3"}],
-  },
-  {
-    _id:4,
-    name:'product 4',
-    price:120,
-    images:[{url:"https://picsum.photos/500/500/?random=4"}],
-  },
-]
-
-const ProductDetails = () => {
   const [mainImage, setMainImage] = useState(selectedProduct.images[0]?.url);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -74,12 +42,23 @@ const ProductDetails = () => {
       return;
     }
     setIsButtonDisabled(true);
-    setTimeout(() => {
-      toast.success("Product added to cart!", {
+    dispatch(
+      addCart({
+        productId: selectedProduct._id,
+        quantity,
+        size: selectedProduct._id,
+        color: selectedProduct._id,
+        guestId,
+        userId: user?._id,
+      })
+    ).then(()=>{
+      toast.success("Product added to cart successfully", {
         duration: 2000,
       });
+    }).finally(()=>{
       setIsButtonDisabled(false);
-    }, 500);
+    }
+    );
   };
 
   useEffect(() => {
@@ -87,6 +66,9 @@ const ProductDetails = () => {
       setMainImage(selectedProduct.images[0].url);
     }
   }, []);
+
+if(loading) return <div className="text-center">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
     <div className="p-6">
@@ -131,7 +113,8 @@ const ProductDetails = () => {
               {selectedProduct.name}
             </h1>
             <p className="text-lg text-gray-600 line-through mb-1">
-              {selectedProduct.originalPrice && `$${selectedProduct.originalPrice}`}
+              {selectedProduct.originalPrice &&
+                `$${selectedProduct.originalPrice}`}
             </p>
             <p className="text-gray-500 mb-2">${selectedProduct.price}</p>
             <p className="text-gray-500 mb-4">{selectedProduct.description}</p>
@@ -149,7 +132,8 @@ const ProductDetails = () => {
                     }`}
                     style={{
                       backgroundColor: color.toLowerCase(),
-                      filter: selectedColor === color ? "none" : "brightness(0.5)",
+                      filter:
+                        selectedColor === color ? "none" : "brightness(0.5)",
                     }}
                   ></button>
                 ))}
@@ -208,7 +192,9 @@ const ProductDetails = () => {
 
             {/* Product Characteristics */}
             <div className="mt-10 text-gray-700">
-              <h3 className="text-2xl text-gray-600 font-bold">Characteristics:</h3>
+              <h3 className="text-2xl text-gray-600 font-bold">
+                Characteristics:
+              </h3>
               <table className="w-full text-left text-sm text-gray-600">
                 <tbody>
                   <tr>
@@ -225,10 +211,10 @@ const ProductDetails = () => {
           </div>
         </div>
         <div className="mt-20">
-  <h2 className="text-2xl text-center font-medium mb-4">
-    You May Also Like
-  </h2>
-<ProductGrid products={similarProduct}/>
+          <h2 className="text-2xl text-center font-medium mb-4">
+            You May Also Like
+          </h2>
+          <ProductGrid products={similarProduct} />
         </div>
       </div>
     </div>

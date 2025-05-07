@@ -1,10 +1,9 @@
-
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const NewArrivals = () => {
- 
   const scrollRef = useRef(null);
 
   const scrollLeft = () => {
@@ -19,44 +18,33 @@ const NewArrivals = () => {
     }
   };
 
-  const newArrivals = [
-    {
-      _id: 1,
-      name: "Jacket",
-      price: 130,
-      images: [{ url: "https://picsum.photos/500?random=1", altText: "Stylish Jacket" }],
-    },
-    {
-      _id: 2,
-      name: "Jacket",
-      price: 130,
-      images: [{ url: "https://picsum.photos/500?random=2", altText: "Trendy Jacket" }],
-    },
-    {
-      _id: 3,
-      name: "Jacket",
-      price: 130,
-      images: [{ url: "https://picsum.photos/500?random=3", altText: "Casual Jacket" }],
-    },
-    {
-      _id: 4,
-      name: "Jacket",
-      price: 130,
-      images: [{ url: "https://picsum.photos/500?random=4", altText: "Classic Jacket" }],
-    },
-    {
-      _id: 5,
-      name: "Jacket",
-      price: 130,
-      images: [{ url: "https://picsum.photos/500?random=5", altText: "Cool Jacket" }],
-    },
-  ];
+  const [newArrivals, setNewArrivals] = useState([]);
+
+  // Fetch new arrivals from the API
+  async function fetchNewArrivals() {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/product/new-arrival`
+      );
+      console.log(response);
+      
+      setNewArrivals(response?.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching new arrivals:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchNewArrivals();
+  }, []);
 
   return (
     <section className="py-12 px-4 lg:px-0">
       {/* Section Heading */}
       <div className="container mx-auto text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">Explore New Arrivals</h2>
+        <h2 className="text-3xl font-bold text-gray-800">
+          Explore New Arrivals
+        </h2>
         <p className="text-lg text-gray-600 mt-2">
           Discover the latest styles fresh off the runway, keeping your wardrobe trendy.
         </p>
@@ -90,7 +78,7 @@ const NewArrivals = () => {
             >
               <img
                 src={product.images[0]?.url}
-                alt={product.images[0]?.altText}
+                alt={product.images[0]?.altText || "Product Image"}
                 className="w-full h-[400px] object-cover rounded-t-lg"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-opacity-60 backdrop-blur-md text-white p-4 rounded-b-lg transition-all">

@@ -1,4 +1,4 @@
-import { createSlice,createAsyncThunk, isRejected } from "@reduxjs/toolkit";
+import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 const createCheckout = createAsyncThunk("checkout/create",async(checkoutData,{rejectWithValue})=>{

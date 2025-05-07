@@ -12,7 +12,7 @@ async function createProduct(req, res) {
     if (missingFields.length > 0) {
       return res.status(400).json({
         success: false,
-        message: `Missing required fields: ${missingFields.join(", ")}`,
+        message: `Missing required fields: ${missingFields.join(",")}`,
       });
     }
 
@@ -247,7 +247,7 @@ async function bestSellerProduct(req, res) {
 
 async function newArrivalProduct(req, res) {
   try {
-    const newArrivals = await Product.find({}).sort({ createdAt: -1 }).limit(8)// Top 10 best sellers
+    const newArrivals = await Product.find({}).sort({ createdAt: -1 })// Top 10 best sellers
 
     if (newArrivals.length === 0) {
       return res.status(404).json({ success: false, message: "No best sellers found" });
